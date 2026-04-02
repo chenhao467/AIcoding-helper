@@ -1,0 +1,34 @@
+spring:
+  config:
+    name: AIcoding-helper
+  datasource:
+    url: jdbc:mysql://localhost:3306/ai_coding_helper?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+langchain4j:
+  community:
+    dashscope:
+      chat-model:
+        api-key: sk-06510cd74a88494dbd943e27969cd3da
+        model-name: qwen-plus
+      embedding-model:
+        api-key: sk-06510cd74a88494dbd943e27969cd3da
+        model-name: text-embedding-v4
+      streaming-chat-model:
+        model-name: qwen-plus
+        api-key: sk-06510cd74a88494dbd943e27969cd3da
+bigmodel:
+  api-key: 64f64c0355454fa09e0324fc28ed3f23.uPf2ztoGjmBveveN
+server:
+  port: 8081
+  servlet:
+    context-path: /api
