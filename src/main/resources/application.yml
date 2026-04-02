@@ -2,9 +2,9 @@ spring:
   config:
     name: AIcoding-helper
   datasource:
-    url: jdbc:mysql://localhost:3306/ai_coding_helper?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/ai_coding_helper?useUnicode=true&amp&characterEncoding=utf8&amp&useSSL=false&amp&serverTimezone=Asia/Shanghai
     username: root
-    password: root
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
