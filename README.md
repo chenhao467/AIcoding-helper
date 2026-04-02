@@ -1,6 +1,8 @@
-# 🚀 AI 编程学习助手
+<img width="1946" height="1048" alt="image" src="https://github.com/user-attachments/assets/eb4f12fe-b4a0-411c-992b-177adc797375" /># 🚀 AI 编程学习助手
 
 一个基于 **LangChain4j + RAG + MCP** 构建的 AI Agent 应用，支持多轮对话、知识增强问答、工具调用与会话记忆，专注于编程学习与面试场景。
+## 👀 项目预览
+<img width="1946" height="1048" alt="image" src="https://github.com/user-attachments/assets/86bc0fd6-7037-4bfd-940b-71fe195d5daf" />
 
 ---
 
