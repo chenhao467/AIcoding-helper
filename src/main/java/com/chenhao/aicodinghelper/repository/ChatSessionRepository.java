@@ -12,6 +12,7 @@ import java.util.List;
 public interface ChatSessionRepository extends JpaRepository<ChatSession, Long> {
 
     List<ChatSession> findByMemoryIdOrderByMessageOrderAsc(Integer memoryId);
+    List<ChatSession> findByMemoryIdOrderByMessageOrderDesc(Integer memoryId);
 
     @Modifying
     @Query("DELETE FROM ChatSession m WHERE m.memoryId = ?1")

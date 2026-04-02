@@ -21,6 +21,8 @@ public class MySQLChatMemory implements ChatMemory {
     private final Object id;
     private final Integer maxMessages;
     private final ChatSessionRepository chatSessionRepository;
+    private String currentAiMessageText = "";
+    private boolean isStreaming = false;
 
     public MySQLChatMemory(Object id, Integer maxMessages, ChatSessionRepository chatSessionRepository) {
         this.id = id;
@@ -38,6 +40,47 @@ public class MySQLChatMemory implements ChatMemory {
     public void add(ChatMessage message) {
         log.info("Adding message to memoryId: {}, type: {}", id, message.type());
         
+        if (message instanceof AiMessage aiMessage) {
+            handleAiMessage(aiMessage);
+        } else {
+            handleNonAiMessage(message);
+        }
+    }
+
+    private void handleAiMessage(AiMessage aiMessage) {
+        String text = aiMessage.text();
+        
+        // 检查是否为流式输出的中间token（通过文本长度和是否以空格结尾判断）
+        if (text.length() < 10 || text.endsWith(" ") || text.endsWith(",") || text.endsWith(".") || text.endsWith(":")) {
+            // 流式输出的中间token，暂存
+            currentAiMessageText += text;
+            isStreaming = true;
+            log.info("Streaming token received: {}", text);
+        } else {
+            // 完整的AI消息
+            if (isStreaming) {
+                // 如果之前有流式token，拼接完整消息
+                text = currentAiMessageText + text;
+                currentAiMessageText = "";
+                isStreaming = false;
+                log.info("Streaming completed, full message: {}", text);
+            }
+            
+            // 检查是否为重复的AI消息
+            if (!isDuplicateAiMessage(text)) {
+                saveAiMessage(text);
+            }
+        }
+    }
+
+    private void handleNonAiMessage(ChatMessage message) {
+        // 如果有未完成的流式AI消息，先保存
+        if (isStreaming && !currentAiMessageText.isEmpty()) {
+            saveAiMessage(currentAiMessageText);
+            currentAiMessageText = "";
+            isStreaming = false;
+        }
+        
         Integer memoryId = convertToMemoryId(id);
         Integer nextOrder = getNextOrder(memoryId);
         
@@ -52,6 +95,41 @@ public class MySQLChatMemory implements ChatMemory {
         chatSessionRepository.save(entity);
         
         trimIfNecessary(memoryId);
+    }
+
+    private void saveAiMessage(String text) {
+        Integer memoryId = convertToMemoryId(id);
+        Integer nextOrder = getNextOrder(memoryId);
+        
+        ChatSession entity = ChatSession.builder()
+                .memoryId(memoryId)
+                .messageType("AI")
+                .messageText(text)
+                .messageOrder(nextOrder)
+                .createdAt(LocalDateTime.now())
+                .build();
+        
+        chatSessionRepository.save(entity);
+        
+        trimIfNecessary(memoryId);
+    }
+
+    private boolean isDuplicateAiMessage(String text) {
+        Integer memoryId = convertToMemoryId(id);
+        List<ChatSession> entities = chatSessionRepository.findByMemoryIdOrderByMessageOrderDesc(memoryId);
+        
+        // 检查最近的消息是否也是AI消息且内容相似
+        for (ChatSession entity : entities) {
+            if ("AI".equals(entity.getMessageType())) {
+                // 如果内容包含或被包含，认为是重复
+                if (entity.getMessageText().contains(text) || text.contains(entity.getMessageText())) {
+                    log.info("Duplicate AI message detected, skipping: {}", text);
+                    return true;
+                }
+                break; // 只检查最近的一条AI消息
+            }
+        }
+        return false;
     }
 
     @Override
@@ -76,6 +154,8 @@ public class MySQLChatMemory implements ChatMemory {
         log.info("Clearing memory for memoryId: {}", id);
         Integer memoryId = convertToMemoryId(id);
         chatSessionRepository.deleteByMemoryId(memoryId);
+        currentAiMessageText = "";
+        isStreaming = false;
     }
 
     private Integer convertToMemoryId(Object id) {
