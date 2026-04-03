@@ -44,7 +44,7 @@
         <div class="messages-inner">
           <div class="welcome" v-if="messages.length === 0">
             <h3>你好，我是你的 AI 助手</h3>
-            <p>这里是单输入框多模式工作区，风格参考 ChatGPT 深色界面。</p>
+            <p>需要我做什么?</p>
           </div>
 
           <div
