@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 @Component
 public class IntentClassifier {
 
-    private static final Pattern TICKET_NO_PATTERN = Pattern.compile("T\\d{8,}");
+    private static final Pattern TICKET_NO_PATTERN = Pattern.compile("(?i)T\\d{8,}");
 
     /**
      * MVP 阶段使用轻量规则分类，后续可替换为 LLM 意图分类器。
@@ -21,7 +21,7 @@ public class IntentClassifier {
         Map<String, String> slots = new HashMap<>();
         Matcher matcher = TICKET_NO_PATTERN.matcher(message);
         if (matcher.find()) {
-            slots.put("ticketNo", matcher.group());
+            slots.put("ticketNo", matcher.group().toUpperCase());
         }
 
         if (lower.contains("创建工单") || lower.contains("提单") || lower.contains("create ticket")) {
