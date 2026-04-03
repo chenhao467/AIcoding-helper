@@ -3,6 +3,8 @@ package com.chenhao.aicodinghelper.tool;
 import com.chenhao.aicodinghelper.common.exception.BizException;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,5 +27,13 @@ public class ToolExecutor {
             throw new BizException("工具不存在: " + toolName);
         }
         return tool.execute(input, context);
+    }
+
+    public boolean hasTool(String toolName) {
+        return tools.containsKey(toolName);
+    }
+
+    public Collection<AgentTool<?, ?>> allTools() {
+        return Collections.unmodifiableCollection(tools.values());
     }
 }
