@@ -1,8 +1,8 @@
 package com.chenhao.aicodinghelper.controller;
 
-import com.chenhao.aicodinghelper.dto.AgentChatRequest;
-import com.chenhao.aicodinghelper.orchestrator.ConversationOrchestrator;
-import com.chenhao.aicodinghelper.vo.AgentChatResponse;
+import com.chenhao.aicodinghelper.agent.orchestrator.ConversationOrchestrator;
+import com.chenhao.aicodinghelper.agent.dto.AgentChatRequest;
+import com.chenhao.aicodinghelper.agent.vo.AgentChatResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

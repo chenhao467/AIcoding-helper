@@ -1,8 +1,8 @@
 package com.chenhao.aicodinghelper.ai;
 
 import com.chenhao.aicodinghelper.ai.tools.InterviewQuestionTool;
-import com.chenhao.aicodinghelper.memory.MySQLChatMemory;
-import com.chenhao.aicodinghelper.repository.ChatSessionRepository;
+import com.chenhao.aicodinghelper.persist.memory.MySQLChatMemory;
+import com.chenhao.aicodinghelper.persist.repository.ChatSessionRepository;
 import dev.langchain4j.mcp.McpToolProvider;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
