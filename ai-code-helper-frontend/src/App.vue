@@ -216,17 +216,22 @@ onMounted(() => {
 
 <style scoped>
 .page {
-  min-height: 100vh;
+  height: 100vh;
   background: #1b1c1f;
   color: #ececec;
   display: grid;
   grid-template-columns: 260px 1fr;
+  overflow: hidden;
 }
 
 .sidebar {
   border-right: 1px solid #2f3034;
   background: #111214;
   padding: 14px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .sidebar-top {
@@ -341,7 +346,9 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  height: 100vh;
   background: #1a1b1e;
+  overflow: hidden;
 }
 
 .chat-header {
@@ -368,6 +375,26 @@ onMounted(() => {
   flex: 1;
   overflow-y: auto;
   padding: 24px 20px 120px;
+  scrollbar-width: thin;
+  scrollbar-color: #3a3d45 #1a1b1e;
+}
+
+.messages::-webkit-scrollbar {
+  width: 10px;
+}
+
+.messages::-webkit-scrollbar-track {
+  background: #1a1b1e;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background: #3a3d45;
+  border-radius: 10px;
+  border: 2px solid #1a1b1e;
+}
+
+.messages::-webkit-scrollbar-thumb:hover {
+  background: #4a4e58;
 }
 
 .messages-inner {
