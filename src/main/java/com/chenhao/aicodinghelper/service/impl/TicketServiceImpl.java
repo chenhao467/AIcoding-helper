@@ -13,7 +13,11 @@ import com.chenhao.aicodinghelper.mapper.TicketMapper;
 import com.chenhao.aicodinghelper.service.TicketService;
 import com.chenhao.aicodinghelper.vo.TicketDetailVO;
 import com.chenhao.aicodinghelper.vo.TicketResultVO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TicketServiceImpl implements TicketService {
 
+    private static final Logger log = LoggerFactory.getLogger(TicketServiceImpl.class);
     private final TicketMapper ticketMapper;
     private final TicketActionLogMapper actionLogMapper;
 
@@ -97,7 +102,12 @@ public class TicketServiceImpl implements TicketService {
         TicketActionLogEntity actionLog = new TicketActionLogEntity();
         actionLog.setTicketId(ticketId);
         actionLog.setActionType(actionType);
-        actionLog.setActionDetail(detail);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            actionLog.setActionDetail(mapper.writeValueAsString("Invalid value."));
+        }catch (JsonProcessingException e){
+            log.info("保存工单详细信息时json格式解析错误");
+        }
         actionLog.setOperatorId(operatorId);
         actionLogMapper.insert(actionLog);
     }

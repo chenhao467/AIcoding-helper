@@ -1,6 +1,8 @@
 spring:
   config:
     name: AIcoding-helper
+  profiles:
+    active: local
   datasource:
     url: jdbc:mysql://localhost:3306/ai_coding_helper?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
     username: <your-username>
@@ -38,6 +40,7 @@ server:
   port: 8081
   servlet:
     context-path: /api
-
+bigmodel:
+  api-key: <your-bigmodel-key>
 agent:
   default-tenant-id: 1

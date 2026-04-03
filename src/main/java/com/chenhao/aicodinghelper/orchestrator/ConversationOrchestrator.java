@@ -30,7 +30,7 @@ public class ConversationOrchestrator {
     private final ToolExecutor toolExecutor;
     private final ToolCallLogService toolCallLogService;
     private final ObjectMapper objectMapper;
-
+    //意图识别 → 工具路由执行 → 结果回填答复
     public AgentChatResponse handle(AgentChatRequest request) {
         IntentResult result = intentClassifier.classify(request.getMessage());
         ToolContext context = ToolContext.builder()
@@ -51,7 +51,12 @@ public class ConversationOrchestrator {
             };
         } catch (Exception ex) {
             logFailure(context, "orchestrator", request, ex.getMessage(), request.getTenantId());
-            throw ex;
+            AgentChatResponse exceptionResponse = AgentChatResponse.builder()
+                    .success(false)
+                    .reply(ex.getMessage())
+                    .intent(result.getIntentType().name()).build();
+            return exceptionResponse;
+
         }
     }
 
@@ -64,9 +69,14 @@ public class ConversationOrchestrator {
         dto.setTitle(extractTitle(request.getMessage()));
         dto.setDescription(request.getMessage());
         dto.setPriority(slots.getOrDefault("priority", "P3"));
+        TicketResultVO ticket;
+        try {
+            ticket = toolExecutor.execute("create_ticket", dto, context);
+            logSuccess(context, "create_ticket", dto, ticket, null, context.getTenantId());
+        }catch (BizException e){
+            throw e;
+        }
 
-        TicketResultVO ticket = toolExecutor.execute("create_ticket", dto, context);
-        logSuccess(context, "create_ticket", dto, ticket, null, context.getTenantId());
         return "已创建工单: " + ticket.getTicketNo() + "，状态: " + ticket.getStatus();
     }
 

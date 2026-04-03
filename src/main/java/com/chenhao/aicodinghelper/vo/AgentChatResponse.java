@@ -9,6 +9,11 @@ public class AgentChatResponse {
     private boolean success;
     private String intent;
     private String reply;
+    public AgentChatResponse(boolean success,String intent,String reply){
+        this.success = success;
+        this.intent = intent;
+        this.reply = reply;
+    }
 
     public static AgentChatResponse ok(String intent, String reply) {
         return AgentChatResponse.builder().success(true).intent(intent).reply(reply).build();
