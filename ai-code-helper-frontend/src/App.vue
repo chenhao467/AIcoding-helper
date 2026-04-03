@@ -175,7 +175,9 @@ const sendByAgent = async (message, aiMessageIndex) => {
 
     const result = await response.json()
     messages.value[aiMessageIndex].content = result.reply || '服务暂未返回结果'
-    messages.value[aiMessageIndex].mode = `Intent: ${result.intent || 'UNKNOWN'}`
+    const action = result.action || 'final_answer'
+    const tool = result.tool ? `, Tool: ${result.tool}` : ''
+    messages.value[aiMessageIndex].mode = `Intent: ${result.intent || 'UNKNOWN'}, Action: ${action}${tool}`
   } catch (error) {
     messages.value[aiMessageIndex].content = `调用业务 Agent 失败：${error.message}`
   } finally {
