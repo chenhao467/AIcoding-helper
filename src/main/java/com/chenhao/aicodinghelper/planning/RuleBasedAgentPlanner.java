@@ -7,9 +7,9 @@ import com.chenhao.aicodinghelper.intent.IntentClassifier;
 import com.chenhao.aicodinghelper.intent.IntentResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
+
 
 @Component
 @RequiredArgsConstructor

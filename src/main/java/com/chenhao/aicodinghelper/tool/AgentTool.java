@@ -1,7 +1,16 @@
 package com.chenhao.aicodinghelper.tool;
 
+import java.util.List;
+import java.util.Map;
+
 public interface AgentTool<I, O> {
     String name();
+
+    String description();
+
+    List<String> requiredParams();
+
+    Map<String, String> parameterHints();
 
     Class<I> inputType();
 
