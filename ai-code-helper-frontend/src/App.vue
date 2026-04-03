@@ -1,78 +1,85 @@
 <template>
   <div class="page">
     <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-logo">AI</div>
-        <div>
-          <h1>AI 助手</h1>
-          <p>Assistant Workspace</p>
+      <div class="sidebar-top">
+        <div class="brand">
+          <div class="brand-logo">◎</div>
+          <div class="brand-name">AIcoding</div>
+        </div>
+
+        <button class="new-chat-btn" @click="createNewChat">+ 新建对话</button>
+
+        <nav class="nav-group">
+          <p class="nav-title">工作台</p>
+          <button class="nav-item active">💬 对话</button>
+          <button class="nav-item">🧭 探索</button>
+          <button class="nav-item">📚 知识库</button>
+        </nav>
+
+        <div class="mode-card">
+          <p class="mode-title">对话模式</p>
+          <div class="mode-options">
+            <button
+              v-for="mode in modes"
+              :key="mode.value"
+              class="mode-btn"
+              :class="{ active: currentMode === mode.value }"
+              @click="switchMode(mode.value)"
+            >
+              {{ mode.label }}
+            </button>
+          </div>
+          <p class="mode-desc">{{ currentModeDesc }}</p>
         </div>
       </div>
-
-      <div class="mode-card">
-        <p class="mode-title">对话模式</p>
-        <div class="mode-options">
-          <button
-            v-for="mode in modes"
-            :key="mode.value"
-            class="mode-btn"
-            :class="{ active: currentMode === mode.value }"
-            @click="switchMode(mode.value)"
-          >
-            {{ mode.label }}
-          </button>
-        </div>
-        <p class="mode-desc">{{ currentModeDesc }}</p>
-      </div>
-
-      <button class="new-chat-btn" @click="createNewChat">+ 新建对话</button>
     </aside>
 
     <main class="chat-main">
       <header class="chat-header">
-        <div>
-          <h2>{{ currentModeHeader }}</h2>
-          <p>统一聊天框，按模式自动选择不同后端接口</p>
-        </div>
-        <span class="status-dot">Online</span>
+        <h2>{{ currentModeHeader }}</h2>
+        <span class="status-dot">● Online</span>
       </header>
 
       <section class="messages" ref="messagesContainer">
-        <div class="welcome" v-if="messages.length === 0">
-          <h3>你好，我是你的 AI 助手</h3>
-          <p>你可以选择“通用对话”或“业务 Agent”，并直接在同一个输入框发起请求。</p>
-        </div>
-
-        <div
-          v-for="(msg, index) in messages"
-          :key="index"
-          :class="['message-row', msg.role]"
-        >
-          <div class="avatar">{{ msg.role === 'user' ? 'U' : 'AI' }}</div>
-          <div class="bubble">
-            <div class="meta" v-if="msg.mode">{{ msg.mode }}</div>
-            <div>{{ msg.content }}</div>
+        <div class="messages-inner">
+          <div class="welcome" v-if="messages.length === 0">
+            <h3>你好，我是你的 AI 助手</h3>
+            <p>这里是单输入框多模式工作区，风格参考 ChatGPT 深色界面。</p>
           </div>
-        </div>
 
-        <div v-if="isTyping" class="message-row ai">
-          <div class="avatar">AI</div>
-          <div class="bubble typing">
-            <span></span><span></span><span></span>
+          <div
+            v-for="(msg, index) in messages"
+            :key="index"
+            :class="['message-row', msg.role]"
+          >
+            <div class="avatar">{{ msg.role === 'user' ? '你' : 'AI' }}</div>
+            <div class="bubble">
+              <div class="meta" v-if="msg.mode">{{ msg.mode }}</div>
+              <div>{{ msg.content }}</div>
+            </div>
+          </div>
+
+          <div v-if="isTyping" class="message-row ai">
+            <div class="avatar">AI</div>
+            <div class="bubble typing">
+              <span></span><span></span><span></span>
+            </div>
           </div>
         </div>
       </section>
 
-      <footer class="composer">
-        <textarea
-          v-model="inputMessage"
-          placeholder="输入你的问题，回车发送..."
-          @keydown.enter.prevent="sendMessage"
-          :disabled="isLoading"
-          rows="1"
-          ref="inputTextarea"
-        ></textarea>
-        <button @click="sendMessage" :disabled="isLoading || !inputMessage.trim()">发送</button>
+      <footer class="composer-wrap">
+        <div class="composer">
+          <textarea
+            v-model="inputMessage"
+            placeholder="给 AIcoding 发消息..."
+            @keydown.enter.prevent="sendMessage"
+            :disabled="isLoading"
+            rows="1"
+            ref="inputTextarea"
+          ></textarea>
+          <button @click="sendMessage" :disabled="isLoading || !inputMessage.trim()">发送</button>
+        </div>
       </footer>
     </main>
   </div>
@@ -208,59 +215,96 @@ onMounted(() => {
 <style scoped>
 .page {
   min-height: 100vh;
-  background: #0f172a;
-  color: #e2e8f0;
+  background: #1b1c1f;
+  color: #ececec;
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 260px 1fr;
 }
 
 .sidebar {
-  border-right: 1px solid rgba(148, 163, 184, 0.2);
-  padding: 20px 16px;
-  background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
+  border-right: 1px solid #2f3034;
+  background: #111214;
+  padding: 14px;
+}
+
+.sidebar-top {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  padding: 6px 8px;
 }
 
 .brand-logo {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, #6366f1, #06b6d4);
-  font-weight: 700;
+  background: #2a2c31;
+  color: #d8d8d8;
 }
 
-.brand h1 {
-  margin: 0;
-  font-size: 17px;
+.brand-name {
+  font-size: 16px;
+  font-weight: 600;
 }
 
-.brand p {
-  margin: 2px 0 0;
-  color: #94a3b8;
+.new-chat-btn {
+  height: 40px;
+  border: 1px solid #3a3d45;
+  border-radius: 12px;
+  color: #e7e7e7;
+  background: #24262b;
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-title {
   font-size: 12px;
+  color: #8b8d93;
+  padding: 0 8px;
+}
+
+.nav-item {
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #c8c9cd;
+  text-align: left;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.nav-item.active,
+.nav-item:hover {
+  background: #2a2c31;
+  color: #fff;
 }
 
 .mode-card {
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 14px;
-  padding: 12px;
+  background: #1b1d21;
+  border: 1px solid #33353b;
+  border-radius: 12px;
+  padding: 10px;
 }
 
 .mode-title {
   margin: 0 0 10px;
-  font-size: 13px;
-  color: #cbd5e1;
+  font-size: 12px;
+  color: #9fa1a8;
 }
 
 .mode-options {
@@ -270,45 +314,38 @@ onMounted(() => {
 }
 
 .mode-btn {
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  background: transparent;
-  color: #e2e8f0;
+  border: 1px solid #383a42;
+  background: #23252a;
+  color: #d5d6da;
   border-radius: 10px;
-  height: 38px;
+  height: 36px;
   cursor: pointer;
 }
 
 .mode-btn.active {
-  border-color: #38bdf8;
-  background: rgba(56, 189, 248, 0.15);
+  border-color: #646873;
+  background: #2f3239;
+  color: #fff;
 }
 
 .mode-desc {
-  color: #94a3b8;
+  color: #8e9098;
   margin: 10px 0 0;
   font-size: 12px;
   line-height: 1.5;
-}
-
-.new-chat-btn {
-  height: 40px;
-  border: none;
-  border-radius: 10px;
-  color: #0f172a;
-  background: linear-gradient(90deg, #67e8f9, #a5b4fc);
-  font-weight: 600;
-  cursor: pointer;
 }
 
 .chat-main {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  background: #1a1b1e;
 }
 
 .chat-header {
-  padding: 18px 24px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  height: 62px;
+  padding: 0 28px;
+  border-bottom: 1px solid #2e2f33;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -317,43 +354,66 @@ onMounted(() => {
 .chat-header h2 {
   margin: 0;
   font-size: 18px;
-}
-
-.chat-header p {
-  margin: 4px 0 0;
-  color: #94a3b8;
-  font-size: 12px;
+  font-weight: 600;
 }
 
 .status-dot {
   font-size: 12px;
-  color: #22c55e;
+  color: #9ea0a6;
 }
 
 .messages {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
+  padding: 24px 20px 120px;
+}
+
+.messages-inner {
+  max-width: 860px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 
 .welcome {
-  margin: auto;
+  margin: 90px auto;
   text-align: center;
-  color: #94a3b8;
+  color: #9ea0a6;
 }
 
 .welcome h3 {
-  color: #e2e8f0;
-  margin-bottom: 10px;
+  color: #f1f1f1;
+  margin-bottom: 12px;
+  font-size: 28px;
+  font-weight: 600;
 }
 
 .message-row {
   display: flex;
   gap: 10px;
-  max-width: 900px;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  background: #2a2c31;
+  color: #d4d4d4;
+  flex-shrink: 0;
+}
+
+.bubble {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #24262b;
+  border: 1px solid #343741;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  max-width: min(760px, 92vw);
 }
 
 .message-row.user {
@@ -361,69 +421,67 @@ onMounted(() => {
   flex-direction: row-reverse;
 }
 
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  background: #1e293b;
-  color: #cbd5e1;
-}
-
-.bubble {
-  padding: 12px 14px;
-  border-radius: 14px;
-  background: #111827;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  line-height: 1.6;
-  white-space: pre-wrap;
-}
-
 .message-row.user .bubble {
-  background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
-  border: none;
+  background: #30333a;
+  border-color: #434751;
 }
 
 .meta {
   font-size: 11px;
-  opacity: 0.8;
+  color: #9fa4af;
   margin-bottom: 4px;
 }
 
+.composer-wrap {
+  position: sticky;
+  bottom: 0;
+  padding: 14px 22px 18px;
+  background: linear-gradient(to top, rgba(26, 27, 30, 0.98), rgba(26, 27, 30, 0.35));
+}
+
 .composer {
-  border-top: 1px solid rgba(148, 163, 184, 0.2);
-  padding: 16px 24px;
+  max-width: 860px;
+  margin: 0 auto;
+  border: 1px solid #3a3d45;
+  border-radius: 22px;
+  background: #2a2c31;
+  min-height: 56px;
   display: flex;
+  align-items: center;
+  padding: 8px 10px 8px 16px;
   gap: 10px;
-  background: rgba(15, 23, 42, 0.9);
 }
 
 .composer textarea {
   flex: 1;
-  min-height: 48px;
+  min-height: 26px;
   max-height: 160px;
-  border-radius: 12px;
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  background: #0b1220;
-  color: #e2e8f0;
-  padding: 12px;
-  resize: vertical;
+  border: none;
+  background: transparent;
+  color: #f0f0f0;
+  resize: none;
+  outline: none;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.composer textarea::placeholder {
+  color: #9b9da3;
 }
 
 .composer button {
-  width: 88px;
+  width: 76px;
+  height: 40px;
   border-radius: 12px;
   border: none;
-  background: linear-gradient(135deg, #6366f1, #0ea5e9);
-  color: #fff;
+  background: #f3f4f6;
+  color: #1f2229;
   font-weight: 600;
   cursor: pointer;
 }
 
 .composer button:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
@@ -433,21 +491,30 @@ onMounted(() => {
   margin-right: 6px;
   display: inline-block;
   border-radius: 50%;
-  background: #93c5fd;
+  background: #b7bbc4;
   animation: pulse 1.2s infinite ease-in-out;
 }
 
 .typing span:nth-child(2) {
-  animation-delay: .2s;
+  animation-delay: 0.2s;
 }
 
 .typing span:nth-child(3) {
-  animation-delay: .4s;
+  animation-delay: 0.4s;
 }
 
 @keyframes pulse {
-  0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-  40% { transform: scale(1); opacity: 1; }
+  0%,
+  80%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.45;
+  }
+
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 900px) {
@@ -457,7 +524,19 @@ onMounted(() => {
 
   .sidebar {
     border-right: none;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    border-bottom: 1px solid #2f3034;
+  }
+
+  .messages {
+    padding-top: 16px;
+  }
+
+  .welcome {
+    margin: 56px auto;
+  }
+
+  .welcome h3 {
+    font-size: 24px;
   }
 }
 </style>
