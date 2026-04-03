@@ -2,33 +2,42 @@ spring:
   config:
     name: AIcoding-helper
   datasource:
-    url: jdbc:mysql://localhost:3306/ai_coding_helper?useUnicode=true&amp&characterEncoding=utf8&amp&useSSL=false&amp&serverTimezone=Asia/Shanghai
-    username: root
-    password: 123456
+    url: jdbc:mysql://localhost:3306/ai_coding_helper?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: <your-username>
+    password: <your-password>
     driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: true
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
 langchain4j:
   community:
     dashscope:
       chat-model:
-        api-key: sk-06510cd74a88494dbd943e27969cd3da
-        model-name: qwen-plus
+        api-key: <your-key>
+        model-name: <your-model>
       embedding-model:
-        api-key: sk-06510cd74a88494dbd943e27969cd3da
-        model-name: text-embedding-v4
+        api-key: <your-key>
+        model-name: <your-embedding-model>
       streaming-chat-model:
-        model-name: qwen-plus
-        api-key: sk-06510cd74a88494dbd943e27969cd3da
-bigmodel:
-  api-key: 64f64c0355454fa09e0324fc28ed3f23.uPf2ztoGjmBveveN
+        model-name: <your-model>
+        api-key: <your-key>
+
 server:
   port: 8081
   servlet:
     context-path: /api
+
+agent:
+  default-tenant-id: 1
