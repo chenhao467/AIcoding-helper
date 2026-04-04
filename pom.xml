@@ -12,10 +12,10 @@
     </parent>
 
     <groupId>com.chenhao</groupId>
-    <artifactId>AIcoding-helper</artifactId>
+    <artifactId>AI-Company-helper</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>AIcoding-helper</name>
-    <description>AIcoding-helper</description>
+    <name>AI-Company-helper</name>
+    <description>AI-Company-helper</description>
 
     <properties>
         <java.version>21</java.version>

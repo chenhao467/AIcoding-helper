@@ -1,4 +1,4 @@
-🚀 AI 企业提效助手（AIcoding Helper）
+🚀 AI 企业提效助手（AI-Company-Helper）
 一个面向企业场景的 AI Agent 工作助手，基于 LangChain4j + RAG + MCP 构建，支持多轮对话、知识增强问答、工具调用与会话记忆，帮助团队提升知识获取、流程处理与问题解决效率。
 
 👀 项目预览
