@@ -1,6 +1,6 @@
 spring:
   config:
-    name: AIcoding-helper
+    name: AI-Company-helper
   profiles:
     active: local
   datasource:
